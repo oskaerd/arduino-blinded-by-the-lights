@@ -1,0 +1,7 @@
+*/pyc
+__pycache__/*
+*.raw
+*/__pycache__
+Realtime_PyAudio_FFT
+*.wav
+music-visualizer

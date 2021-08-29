@@ -7,11 +7,17 @@
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
+
+
 // Which pin on the Arduino is connected to the NeoPixels?
 #define PIN        2
 
+#define RED_PIN A2
+#define GRN_PIN A1
+#define BLU_PIN A0
+
 // How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS 5 // Popular NeoPixel ring size
+#define NUMPIXELS 8 // Popular NeoPixel ring size
 
 // When setting up the NeoPixel library, we tell it how many pixels,
 // and which pin to use to send signals. Note that for older NeoPixel
@@ -20,6 +26,7 @@
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 uint8_t red, green, blue;
+uint16_t adcRead;
 
 const uint8_t sinus_vals[] = {
     85, 90, 95, 100, 106, 
@@ -48,9 +55,24 @@ const uint8_t sinus_vals[] = {
 #define ONE_QUATER    (NUM_SAMPLES / 4)
 #define ONE_THIRD     (NUM_SAMPLES / 3)
 #define A_HALF        (NUM_SAMPLES / 2)
-#define DELAYVAL      250 // Time (in milliseconds) to pause between pixels
+// Time (in milliseconds) to pause between pixels
+#define DELAYVAL      250
 #define MIN_COLOR     100
 #define MAX_COLOR     170
+
+void pokretla(void)
+{
+  const uint8_t bezwladnosc = 6;
+          red = analogRead(RED_PIN) / 6;
+        if (red <= bezwladnosc)
+          red = 0;
+        green = analogRead(GRN_PIN) / 6;
+        if (green <= bezwladnosc)
+          green = 0;
+        blue = analogRead(BLU_PIN) / 6;
+        if (blue <= bezwladnosc)
+          blue = 0;
+}
 
 void setup() {
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
@@ -59,6 +81,8 @@ void setup() {
   clock_prescale_set(clock_div_1);
 #endif
   // END of Trinket-specific code.
+
+  Serial.begin(115200);
 
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
 }
@@ -70,10 +94,9 @@ void loop()
   for (uint8_t color = 0; color < NUM_SAMPLES; color++)
   {
         //blue = sinus_vals[color];
-        red = sinus_vals[(color+A_HALF)%NUM_SAMPLES];
-        blue = sinus_vals[color];
-        //green = (color) % MAX_COLOR;
-        //blue = (color) % MAX_COLOR;
+//         red = sinus_vals[(color+A_HALF)%NUM_SAMPLES];
+//         blue = sinus_vals[color];
+        pokretla();
         // The first NeoPixel in a strand is #0, second is 1, all the way up
         // to the count of pixels minus one.
         for(int i=0; i<NUMPIXELS; i++)
@@ -85,5 +108,13 @@ void loop()
           pixels.show();   // Send the updated pixel colors to the hardware.
         }
         delay(DELAYVAL); // Pause before next pass through loop
+        adcRead = analogRead(RED_PIN);
+        Serial.print(adcRead);
+        Serial.print(", ");
+        adcRead = analogRead(GRN_PIN);
+        Serial.print(adcRead);
+        Serial.print(", ");
+        adcRead = analogRead(BLU_PIN);
+        Serial.println(adcRead);
   }
 }
