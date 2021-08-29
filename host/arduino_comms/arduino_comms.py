@@ -9,21 +9,16 @@ def list_devices():
     return comdevices
 
 
-class ArduinoSerial:
-    def __init__(self, com, baudrate):
-        #todo close on exit
-        self.uart = serial.Serial(port=com, baudrate=baudrate)
-
-
 class LedDriver:
     def __init__(self, com, baudrate=115200):
-        self.arduino = ArduinoSerial(com, baudrate)
+        # todo close on exit
+        self.com = serial.Serial(port=com, baudrate=baudrate)
 
     def send(self, amplitude):
         tmp = bytes(amplitude)
-        self.arduino.uart.write(tmp)
+        self.com.write(tmp)
 
     def receive(self):
         #received = self.arduino.uart.readline().decode('utf-8')
-        received = self.arduino.uart.read(1)
+        received = self.com.read(1)
         print(received)

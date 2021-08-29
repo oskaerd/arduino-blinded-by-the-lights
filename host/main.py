@@ -14,9 +14,9 @@ WAVE_OUTPUT_FILENAME = 'tmp.wav'
 com = list_devices()[0].name.split(' ')[0]
 led = LedDriver(com)
 
-while True:
-    # todo remove random
-    from random import randint
-    led.send([randint(0, 60), randint(0, 60)])
-    led.receive()
+# while True:
+#     # todo remove random
+#     from random import randint
+#     led.send([randint(0, 60), randint(0, 60)])
+#     led.receive()
 
