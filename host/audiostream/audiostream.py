@@ -1,6 +1,9 @@
 import pyaudio
 import wave
+import librosa.display
 from datetime import datetime
+import matplotlib.pyplot as plt
+import numpy as np
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -64,6 +67,9 @@ class AudioStream:
         self.stream.stop_stream()
 
         # todo make librosa working with raw data instead of this scuffed POS
+        # time_series, sample_rate = librosa.load(output_filename)
+        # stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048))
+
         if RAW_DATA:
             with open('dump.raw', 'w') as rawfile:
                 rawdata = self.frames
