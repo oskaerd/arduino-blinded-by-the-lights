@@ -55,12 +55,13 @@ const uint8_t sinus_vals[] = {
 #define ONE_QUATER    (NUM_SAMPLES / 4)
 #define ONE_THIRD     (NUM_SAMPLES / 3)
 #define A_HALF        (NUM_SAMPLES / 2)
+#define UART_TIMEOUT  200
 // Time (in milliseconds) to pause between pixels
 #define DELAYVAL      250
 #define MIN_COLOR     100
 #define MAX_COLOR     170
 
-void pokretla(void)
+void pokretla(uint8_t adjust)
 {
   const uint8_t bezwladnosc = 6;
           red = analogRead(RED_PIN) / 6;
@@ -83,6 +84,9 @@ void setup() {
   // END of Trinket-specific code.
 
   Serial.begin(115200);
+  Serial.setTimeout(UART_TIMEOUT);
+  red = 100;
+  blue = 100;
 
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
 }
@@ -96,7 +100,6 @@ void loop()
         //blue = sinus_vals[color];
 //         red = sinus_vals[(color+A_HALF)%NUM_SAMPLES];
 //         blue = sinus_vals[color];
-        pokretla();
         // The first NeoPixel in a strand is #0, second is 1, all the way up
         // to the count of pixels minus one.
         for(int i=0; i<NUMPIXELS; i++)
@@ -107,14 +110,30 @@ void loop()
       
           pixels.show();   // Send the updated pixel colors to the hardware.
         }
+
+        uint8_t result[2] = {0};
+        //pokretla(result);
+        Serial.readBytes(result, 2);
+        Serial.write(result, 2);
+
+        if (result[0] <= 30)
+        {
+          red += result[0];
+        }
+        else
+        {
+            red -= (result[0] - 30);
+        }
+
+        if (result[1] <= 30)
+        {
+          blue += result[1];
+        }
+        else
+        {
+            blue -= (result[1] - 30);
+        }
+
         delay(DELAYVAL); // Pause before next pass through loop
-        adcRead = analogRead(RED_PIN);
-        Serial.print(adcRead);
-        Serial.print(", ");
-        adcRead = analogRead(GRN_PIN);
-        Serial.print(adcRead);
-        Serial.print(", ");
-        adcRead = analogRead(BLU_PIN);
-        Serial.println(adcRead);
   }
 }
