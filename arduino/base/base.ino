@@ -7,26 +7,14 @@
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
-
-
 // Which pin on the Arduino is connected to the NeoPixels?
-#define PIN        2
+#define PIN       2
 
-#define RED_PIN A2
-#define GRN_PIN A1
-#define BLU_PIN A0
+#define RED_PIN   A2
+#define GRN_PIN   A1
+#define BLU_PIN   A0
 
-// How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS 8 // Popular NeoPixel ring size
-
-// When setting up the NeoPixel library, we tell it how many pixels,
-// and which pin to use to send signals. Note that for older NeoPixel
-// strips you might need to change the third parameter -- see the
-// strandtest example for more information on possible values.
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
-uint8_t red, green, blue;
-uint16_t adcRead;
+#define NUMPIXELS 8
 
 const uint8_t sinus_vals[] = {
     85, 90, 95, 100, 106, 
@@ -50,8 +38,17 @@ const uint8_t sinus_vals[] = {
     35, 39, 44, 48, 53, 
     58, 63, 69, 74, 79,
   };
-
 #define NUM_SAMPLES   sizeof(sinus_vals)
+
+// When setting up the NeoPixel library, we tell it how many pixels,
+// and which pin to use to send signals. Note that for older NeoPixel
+// strips you might need to change the third parameter -- see the
+// strandtest example for more information on possible values.
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+uint8_t red, green, blue;
+uint16_t adcRead;
+
 #define ONE_QUATER    (NUM_SAMPLES / 4)
 #define ONE_THIRD     (NUM_SAMPLES / 3)
 #define A_HALF        (NUM_SAMPLES / 2)
@@ -61,21 +58,9 @@ const uint8_t sinus_vals[] = {
 #define MIN_COLOR     100
 #define MAX_COLOR     170
 
-void pokretla(uint8_t adjust)
-{
-  const uint8_t bezwladnosc = 6;
-          red = analogRead(RED_PIN) / 6;
-        if (red <= bezwladnosc)
-          red = 0;
-        green = analogRead(GRN_PIN) / 6;
-        if (green <= bezwladnosc)
-          green = 0;
-        blue = analogRead(BLU_PIN) / 6;
-        if (blue <= bezwladnosc)
-          blue = 0;
-}
 
-void setup() {
+void setup()
+{
   // These lines are specifically to support the Adafruit Trinket 5V 16 MHz.
   // Any other board, you can remove this part (but no harm leaving it):
 #if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
@@ -89,50 +74,48 @@ void setup() {
   blue = 100;
 
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.clear(); // Set all pixel colors to 'off'
 }
 
 void loop()
 {
-  //pixels.clear(); // Set all pixel colors to 'off'
-  //for (uint8_t color = MIN_COLOR; color < MAX_COLOR; color+=5)
   for (uint8_t color = 0; color < NUM_SAMPLES; color++)
   {
-        //blue = sinus_vals[color];
-//         red = sinus_vals[(color+A_HALF)%NUM_SAMPLES];
-//         blue = sinus_vals[color];
+        // Run selected way of setting the NeoPixel's color
+
+        SinusLeds(color);
+
         // The first NeoPixel in a strand is #0, second is 1, all the way up
         // to the count of pixels minus one.
-        for(int i=0; i<NUMPIXELS; i++)
-        { // For each pixel...
+        for(int i = 0; i < NUMPIXELS; i++)
+        {
          
           // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255    
           pixels.setPixelColor(i, pixels.Color(red, green, blue));
-      
           pixels.show();   // Send the updated pixel colors to the hardware.
         }
 
-        uint8_t result[2] = {0};
-        //pokretla(result);
-        Serial.readBytes(result, 2);
-        Serial.write(result, 2);
+        // uint8_t result[2] = {0};
+        // Serial.readBytes(result, 2);
+        // Serial.write(result, 2);
 
-        if (result[0] <= 30)
-        {
-          red += result[0];
-        }
-        else
-        {
-            red -= (result[0] - 30);
-        }
+        // if (result[0] <= 30)
+        // {
+        //   red += result[0];
+        // }
+        // else
+        // {
+        //     red -= (result[0] - 30);
+        // }
 
-        if (result[1] <= 30)
-        {
-          blue += result[1];
-        }
-        else
-        {
-            blue -= (result[1] - 30);
-        }
+        // if (result[1] <= 30)
+        // {
+        //   blue += result[1];
+        // }
+        // else
+        // {
+        //     blue -= (result[1] - 30);
+        // }
 
         delay(DELAYVAL); // Pause before next pass through loop
   }
