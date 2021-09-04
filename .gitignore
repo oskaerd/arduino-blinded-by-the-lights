@@ -5,3 +5,5 @@ __pycache__/*
 Realtime_PyAudio_FFT
 *.wav
 music-visualizer
+# my file for testing/plotting/profiling
+*/sandbox.py
