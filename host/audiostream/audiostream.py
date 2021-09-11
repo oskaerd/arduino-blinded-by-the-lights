@@ -5,7 +5,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
-CHUNK = 2048
+#CHUNK = 2048
+CHUNK = 44100//4
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
@@ -31,6 +32,7 @@ class AudioStream:
         self.plot_left_channel = []
         self.plot_right_channel = []
         self.streaming = False
+        self.stream_time = None
 
         # search for loopback device
         devices = [self.audio.get_device_info_by_index(i) for i in range(self.audio.get_device_count())]
@@ -46,8 +48,8 @@ class AudioStream:
                                       rate=rate,
                                       input=True,
                                       input_device_index=self.input_dev_idx,
-                                      frames_per_buffer=chunk)
-                                      # stream_callback=self.stream_callback)
+                                      frames_per_buffer=chunk,
+                                      stream_callback=self.stream_callback)
 
     def __del__(self):
         print('* closing stream')
@@ -64,14 +66,16 @@ class AudioStream:
 
     # TODO: add the one with callback
     # todo implement actual streaming start/stop and remove seconds
-    def start_stream(self):
+    def start_stream(self, stream_time=None):
         print('* starting stream')
         self.streaming = True
+        self.stream_time = stream_time
         self.then = datetime.now()
         self.stream.start_stream()
 
     def stop_stream(self):
         self.streaming = False
+        self.stream_time = None
         now = datetime.now()
         print(f'end: {now.second * 1000000 + now.microsecond - (self.then.second * 1000000 + self.then.microsecond)}')
 
@@ -79,14 +83,16 @@ class AudioStream:
         #now = datetime.now()
         #print(f'cb: {now.second * 1000000 + now.microsecond - (self.then.second * 1000000 + self.then.microsecond)}')
         #self.then = datetime.now()
-        self.plot_data = self.plot_data + list(np.frombuffer(in_data, np.int16))
+        #self.plot_data = self.plot_data + list(np.frombuffer(in_data, np.int16))
+        self.plot_data.append(list(np.frombuffer(in_data, np.int16)))
 
-        if len(self.plot_data) >= 2 * 3 * 44100:
-            print('complete')
-            self.streaming = False
-            return in_data, pyaudio.paComplete
-        else:
-            return in_data, pyaudio.paContinue
+        if self.stream_time is not None:
+            #if len(self.plot_data) >= CHANNELS * self.stream_time * RATE:
+            if len(self.plot_data) >= 65:
+                print('complete')
+                self.streaming = False
+                return in_data, pyaudio.paComplete
+        return in_data, pyaudio.paContinue
 
     def record(self, seconds, output_filename):
         if seconds <= 0:
@@ -95,9 +101,9 @@ class AudioStream:
         print("* recording")
         self.frames = []
 
-        for s in range(1):
-            self.frames = []
-            for i in range(0, int(RATE / CHUNK * 3)):
+        for s in range(seconds):
+            #self.frames = [] ????
+            for i in range(0, int(RATE / CHUNK)):
                 data = self.stream.read(CHUNK)
                 self.frames.append(data)
 

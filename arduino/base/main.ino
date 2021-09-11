@@ -17,7 +17,7 @@ void setup(void)
     clock_prescale_set(clock_div_1);
 #endif
 
-    attachInterrupt(digitalPinToInterrupt(ALGO_CHANGE_BTN_PIN), ChangeAlgoButtonIsr, FALLING);
+    //attachInterrupt(digitalPinToInterrupt(ALGO_CHANGE_BTN_PIN), ChangeAlgoButtonIsr, FALLING);
 
     Serial.begin(115200);
     Serial.setTimeout(UART_TIMEOUT);
@@ -43,4 +43,3 @@ void loop(void)
     // TODO make control functions returning the delay
     delay(DELAYVAL);
 }
-

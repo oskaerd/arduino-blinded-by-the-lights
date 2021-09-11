@@ -6,7 +6,7 @@
 // Which pin on the Arduino is connected to the NeoPixels?
 #define NEOPIXEL_PIN       2
 #define ALGO_CHANGE_BTN_PIN 3
-#define NUMPIXELS           8
+#define NUMPIXELS           75
 
 // NeoPixel Control Algorithms table
 typedef void (*LedControl)(uint32_t);
