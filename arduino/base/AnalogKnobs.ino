@@ -1,3 +1,8 @@
+
+#define RED_PIN             A2
+#define GRN_PIN             A1
+#define BLU_PIN             A0
+
 uint32_t AnalogKnobs(uint32_t adjust)
 {
     const uint8_t inertia = 6;

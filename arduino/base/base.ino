@@ -6,11 +6,7 @@
 // Which pin on the Arduino is connected to the NeoPixels?
 #define NEOPIXEL_PIN        2
 #define ALGO_CHANGE_BTN_PIN 3
-#define NUMPIXELS           25
-
-#define RED_PIN             A2
-#define GRN_PIN             A1
-#define BLU_PIN             A0
+#define NUMPIXELS           20
 
 // Time (in milliseconds) to pause between pixels
 #define DELAYVAL      250
