@@ -1,6 +1,6 @@
-void SerialMusic(uint32_t iteration)
+uint32_t SerialMusic(uint32_t iteration)
 {
-    
+    return DELAYVAL;
 }
 
         // uint8_t result[2] = {0};

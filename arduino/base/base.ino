@@ -4,12 +4,19 @@
 #endif
 
 // Which pin on the Arduino is connected to the NeoPixels?
-#define NEOPIXEL_PIN       2
+#define NEOPIXEL_PIN        2
 #define ALGO_CHANGE_BTN_PIN 3
-#define NUMPIXELS           75
+#define NUMPIXELS           25
+
+#define RED_PIN             A2
+#define GRN_PIN             A1
+#define BLU_PIN             A0
+
+// Time (in milliseconds) to pause between pixels
+#define DELAYVAL      250
 
 // NeoPixel Control Algorithms table
-typedef void (*LedControl)(uint32_t);
+typedef uint32_t (*LedControl)(uint32_t);
 
 LedControl gLedControlFuncs[] =
 {

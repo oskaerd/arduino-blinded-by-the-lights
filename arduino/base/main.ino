@@ -3,8 +3,7 @@
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 #define UART_TIMEOUT  200
-// Time (in milliseconds) to pause between pixels
-#define DELAYVAL      250
+
 #define MIN_COLOR     100
 #define MAX_COLOR     170
 
@@ -31,7 +30,8 @@ void setup(void)
 void loop(void)
 {
     // Run selected way of setting the NeoPixel's color
-    gLedControlFuncs[gCurrentLedFuncIdx](gCurrentIteration);
+    //uint32_t delayVal = gLedControlFuncs[gCurrentLedFuncIdx](gCurrentIteration);
+    uint32_t delayVal = SinusLeds(gCurrentIteration);
     gCurrentIteration++;
     for(int i = 0; i < NUMPIXELS; i++)
     {         
@@ -40,6 +40,5 @@ void loop(void)
         pixels.show();   // Send the updated pixel colors to the hardware.
     }
 
-    // TODO make control functions returning the delay
-    delay(DELAYVAL);
+    delay(delayVal);
 }

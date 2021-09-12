@@ -12,13 +12,16 @@ def list_devices():
 class LedDriver:
     def __init__(self, com, baudrate=115200):
         # todo close on exit
-        self.com = serial.Serial(port=com, baudrate=baudrate)
+        self.com = serial.Serial(port=com, baudrate=baudrate, timeout=1)
 
     def send(self, amplitude):
-        tmp = bytes(amplitude)
-        self.com.write(tmp)
+        # tmp = bytes(amplitude)
+        # self.com.write(tmp)
+        pass
 
-    def receive(self):
-        #received = self.arduino.uart.readline().decode('utf-8')
-        received = self.com.read(1)
+    def receive(self, testing=False):
+        if testing:
+            received = self.com.readline().decode('utf-8')
+        else:
+            received = self.com.read(1)
         print(received)
