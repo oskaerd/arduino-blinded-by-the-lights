@@ -1,35 +1,34 @@
-#define RED_IDX     0
-#define GREEN_IDX   1
-#define BLUE_IDX    2
+#define RGB_DATA_BYTES  4
 
+
+typedef union _UartRgbData
+{
+    struct {
+        uint8_t red;
+        uint8_t green;
+        uint8_t blue;
+        uint8_t reserved;
+    } rgb;
+    uint8_t raw[RGB_DATA_BYTES];
+} UartRgbData;
+
+static UartRgbData rgbData;
 
 uint32_t SerialMusic(uint32_t iteration)
 {
-    uint8_t readData[3];
+    Serial.readBytes(rgbData.raw, sizeof(uint32_t));
 
+    Serial.print(rgbData.rgb.red);
+    Serial.print(' ');
+    Serial.print(rgbData.rgb.green);
+    Serial.print(' ');
+    Serial.print(rgbData.rgb.blue);
+    Serial.print(' ');
+    Serial.println(rgbData.rgb.reserved);
 
+    red     = rgbData.rgb.red;
+    green   = rgbData.rgb.green;
+    blue    = rgbData.rgb.blue;
 
-    return DELAYVAL;
+    return 10;
 }
-
-        // uint8_t result[2] = {0};
-        // Serial.readBytes(result, 2);
-        // Serial.write(result, 2);
-
-        // if (result[0] <= 30)
-        // {
-        //   red += result[0];
-        // }
-        // else
-        // {
-        //     red -= (result[0] - 30);
-        // }
-
-        // if (result[1] <= 30)
-        // {
-        //   blue += result[1];
-        // }
-        // else
-        // {
-        //     blue -= (result[1] - 30);
-        // }

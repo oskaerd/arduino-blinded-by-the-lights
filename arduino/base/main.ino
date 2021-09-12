@@ -2,7 +2,7 @@
 // and which pin to use to send signals.
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-#define UART_TIMEOUT  200
+#define UART_TIMEOUT  1000
 
 #define MIN_COLOR     100
 #define MAX_COLOR     170
@@ -31,7 +31,7 @@ void loop(void)
 {
     // Run selected way of setting the NeoPixel's color
     //uint32_t delayVal = gLedControlFuncs[gCurrentLedFuncIdx](gCurrentIteration);
-    uint32_t delayVal = AnalogKnobs(gCurrentIteration);
+    uint32_t delayVal = SerialMusic(gCurrentIteration);
     gCurrentIteration++;
     for(int i = 0; i < NUMPIXELS; i++)
     {         

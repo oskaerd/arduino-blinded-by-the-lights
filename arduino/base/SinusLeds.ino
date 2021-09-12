@@ -28,12 +28,15 @@ const uint8_t sinus_vals[] = {
 
 #define DELAY_PIN         A0
 #define PHASE_PIN         A1
+#define GREEN_PIN         A3
 
 #define DELAY_MIN         20
 #define DELAY_MAX         250
 #define DELAY_CTRL_RANGE  ((uint32_t)(DELAY_MAX - DELAY_MIN))
 #define ADC_MAX           1023
 
+// todo move and remove
+#define ADC_READ_MASK       (~(0x7))
 
 u32 SinusLeds(uint32_t mainLoopIteration)
 {
@@ -44,6 +47,7 @@ u32 SinusLeds(uint32_t mainLoopIteration)
 
     red = sinus_vals[(color + phase) % NUM_SAMPLES];
     blue = sinus_vals[color];
+    green = (analogRead(GREEN_PIN) & ADC_READ_MASK) >> 2;
 
     return delayVal;
 }

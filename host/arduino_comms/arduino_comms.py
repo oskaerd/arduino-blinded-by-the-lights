@@ -8,16 +8,17 @@ def list_devices():
         print(com)
     return comdevices
 
-
+# todo add timestamps
 class LedDriver:
     def __init__(self, com, baudrate=115200):
         # todo close on exit
-        self.com = serial.Serial(port=com, baudrate=baudrate, timeout=1)
+        self.com = serial.Serial(port=com, baudrate=baudrate)
 
-    def send(self, amplitude):
-        # tmp = bytes(amplitude)
-        # self.com.write(tmp)
-        pass
+    def send(self, red, green, blue):
+        rgb = [red, green, blue, 0]
+        rgb = bytearray(rgb)
+        print(rgb)
+        self.com.write(rgb)
 
     def receive(self, testing=False):
         if testing:
