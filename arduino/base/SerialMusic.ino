@@ -1,5 +1,14 @@
+#define RED_IDX     0
+#define GREEN_IDX   1
+#define BLUE_IDX    2
+
+
 uint32_t SerialMusic(uint32_t iteration)
 {
+    uint8_t readData[3];
+
+
+
     return DELAYVAL;
 }
 

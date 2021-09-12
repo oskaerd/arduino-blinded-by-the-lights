@@ -31,7 +31,7 @@ void loop(void)
 {
     // Run selected way of setting the NeoPixel's color
     //uint32_t delayVal = gLedControlFuncs[gCurrentLedFuncIdx](gCurrentIteration);
-    uint32_t delayVal = SinusLeds(gCurrentIteration);
+    uint32_t delayVal = AnalogKnobs(gCurrentIteration);
     gCurrentIteration++;
     for(int i = 0; i < NUMPIXELS; i++)
     {         
