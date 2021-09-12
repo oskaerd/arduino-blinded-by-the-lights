@@ -4,7 +4,8 @@
 #endif
 
 // Which pin on the Arduino is connected to the NeoPixels?
-#define NEOPIXEL_PIN        2
+#define NEOPIXEL_UNIT0_PIN  2
+#define NEOPIXEL_UNIT1_PIN  4
 #define ALGO_CHANGE_BTN_PIN 3
 #define NUMPIXELS           20
 
