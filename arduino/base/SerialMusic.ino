@@ -18,17 +18,9 @@ uint32_t SerialMusic(uint32_t iteration)
 {
     Serial.readBytes(rgbData.raw, sizeof(uint32_t));
 
-    Serial.print(rgbData.rgb.red);
-    Serial.print(' ');
-    Serial.print(rgbData.rgb.green);
-    Serial.print(' ');
-    Serial.print(rgbData.rgb.blue);
-    Serial.print(' ');
-    Serial.println(rgbData.rgb.reserved);
-
     red     = rgbData.rgb.red;
     green   = rgbData.rgb.green;
     blue    = rgbData.rgb.blue;
 
-    return 10;
+    return DELAYVAL;
 }
