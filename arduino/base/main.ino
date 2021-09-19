@@ -1,9 +1,15 @@
 // When setting up the NeoPixel library, we tell it how many pixels,
 // and which pin to use to send signals.
-// todo make table
-Adafruit_NeoPixel unit0(NUMPIXELS, NEOPIXEL_UNIT0_PIN, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel unit1(NUMPIXELS, NEOPIXEL_UNIT1_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel allUnits[] = {
+    Adafruit_NeoPixel(NUMPIXELS, NEOPIXEL_UNIT0_PIN, NEO_GRB + NEO_KHZ800),
+    Adafruit_NeoPixel(NUMPIXELS, NEOPIXEL_UNIT1_PIN, NEO_GRB + NEO_KHZ800),
+    Adafruit_NeoPixel(NUMPIXELS, NEOPIXEL_UNIT2_PIN, NEO_GRB + NEO_KHZ800),
+    Adafruit_NeoPixel(NUMPIXELS, NEOPIXEL_UNIT3_PIN, NEO_GRB + NEO_KHZ800),
+    Adafruit_NeoPixel(NUMPIXELS, NEOPIXEL_UNIT4_PIN, NEO_GRB + NEO_KHZ800),
+};
 
+#define NEOPIXEL_UNITS_COUNT  (sizeof(allUnits)/sizeof(Adafruit_NeoPixel))
+#define FOR_ALL_UNITS(i) for(uint8_t i = 0; i < NEOPIXEL_UNITS_COUNT; i++)
 
 #define UART_TIMEOUT  1000
 
@@ -23,14 +29,14 @@ void setup(void)
 
     Serial.begin(115200);
     Serial.setTimeout(UART_TIMEOUT);
-    red = 100;
-    blue = 100;
 
-    // todo make for ALL_UNITS define
-    unit0.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-    unit1.begin();
-    unit0.clear(); // Set all pixel colors to 'off'
-    unit1.clear();
+    FOR_ALL_UNITS(i)
+    {
+        // INITIALIZE NeoPixel strip object (REQUIRED)
+        allUnits[i].begin();
+        // Set all pixel colors to 'off'
+        allUnits[i].clear();
+    }
 }
 
 void loop(void)
@@ -39,14 +45,16 @@ void loop(void)
     //uint32_t delayVal = gLedControlFuncs[gCurrentLedFuncIdx](gCurrentIteration);
     uint32_t delayVal = SinusLeds(gCurrentIteration);
     gCurrentIteration++;
-    for(int i = 0; i < NUMPIXELS; i++)
-    {         
-        // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
-        unit0.setPixelColor(i, unit0.Color(red, green, blue));
-        unit1.setPixelColor(i, unit1.Color(red, green, blue));
-       // Send the updated pixel colors to the hardware.
-        unit0.show();
-        unit1.show();
+    
+    FOR_ALL_UNITS(unit)
+    {
+        for(int i = 0; i < NUMPIXELS; i++)
+        {         
+            // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
+            allUnits[unit].setPixelColor(i, allUnits[unit].Color(red, green, blue));
+            // Send the updated pixel colors to the hardware.
+            allUnits[unit].show();
+        }
     }
 
     delay(delayVal);
